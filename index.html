@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="Yeminli Çark - Kaderin çarkını çevir, kaderini belirle! Absürt ve eğlenceli çark çevirme deneyimi.">
+    <meta name="keywords" content="yeminli çark, çark çevirme, kader çarkı, rastgele seçim, eğlenceli çark">
+    <meta name="theme-color" content="#8b5cf6">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Yeminli Çark - Kaderin Çarkı">
+    <meta property="og:description" content="Yeminli Çark - Kaderin çarkını çevir, kaderini belirle! Absürt ve eğlenceli çark çevirme deneyimi.">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630/8b5cf6/ffffff?text=Wheel+Spinner">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Yeminli Çark - Kaderin Çarkı">
+    <meta property="twitter:description" content="Yeminli Çark - Kaderin çarkını çevir, kaderini belirle! Absürt ve eğlenceli çark çevirme deneyimi.">
+    <meta property="twitter:image" content="https://via.placeholder.com/1200x630/8b5cf6/ffffff?text=Wheel+Spinner">
+    
+    <title>Yeminli Çark - Kaderin Çarkı 🎡</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎡</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎡</text></svg>">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="animated-background">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    <div class="container">
+        <header>
+            <h1>🎡 Yeminli Çark</h1>
+            <p class="tagline">Herkes kendine yakışanı yapsın</p>
+        </header>
+
+        <div class="wheels-container">
+            <!-- Wheel 1 -->
+            <div class="wheel-section">
+                <div class="wheel-header">
+                    <h2>🎯 Çark 1 – İnsanlar</h2>
+                    <div class="selected-result" id="result1">Çarkı çevirmek için hazır... 🎲</div>
+                </div>
+                <div class="wheel-wrapper">
+                    <canvas id="wheel1" width="400" height="400"></canvas>
+                    <div class="pointer"></div>
+                </div>
+                <button class="spin-btn" id="spinBtn1">⚡ ÇARKI ÇEVİR ⚡</button>
+                
+                <div class="options-panel">
+                    <div class="options-header">
+                        <h3>Seçenekler</h3>
+                        <div class="options-count" id="count1">0 seçenek</div>
+                    </div>
+                    <div class="add-option">
+                        <input type="text" id="input1" placeholder="Yeni seçenek ekle..." maxlength="50">
+                        <button class="add-btn" id="addBtn1">➕ Ekle</button>
+                    </div>
+                    <div class="options-list" id="optionsList1">
+                        <!-- Options will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wheel 2 -->
+            <div class="wheel-section">
+                <div class="wheel-header">
+                    <h2>🎯 Çark 2 – Valorant Ajanları</h2>
+                    <div class="selected-result" id="result2">Çarkı çevirmek için hazır... 🎲</div>
+                </div>
+                <div class="wheel-wrapper">
+                    <canvas id="wheel2" width="400" height="400"></canvas>
+                    <div class="pointer"></div>
+                </div>
+                <button class="spin-btn" id="spinBtn2">⚡ ÇARKI ÇEVİR ⚡</button>
+                
+                <div class="options-panel">
+                    <div class="options-header">
+                        <h3>Seçenekler</h3>
+                        <div class="options-count" id="count2">0 seçenek</div>
+                    </div>
+                    <div class="add-option">
+                        <input type="text" id="input2" placeholder="Yeni seçenek ekle..." maxlength="50">
+                        <button class="add-btn" id="addBtn2">➕ Ekle</button>
+                    </div>
+                    <div class="options-list" id="optionsList2">
+                        <!-- Options will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
