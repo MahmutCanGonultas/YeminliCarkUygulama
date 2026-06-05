@@ -1,115 +1,377 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta name="description" content="Yeminli Çark - Kaderin çarkını çevir, kaderini belirle! Absürt ve eğlenceli çark çevirme deneyimi.">
-    <meta name="keywords" content="yeminli çark, çark çevirme, kader çarkı, rastgele seçim, eğlenceli çark">
-    <meta name="theme-color" content="#8b5cf6">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Yeminli Çark - Kaderin Çarkı">
-    <meta property="og:description" content="Yeminli Çark - Kaderin çarkını çevir, kaderini belirle! Absürt ve eğlenceli çark çevirme deneyimi.">
-    <meta property="og:image" content="https://via.placeholder.com/1200x630/8b5cf6/ffffff?text=Wheel+Spinner">
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Yeminli Çark - Kaderin Çarkı">
-    <meta property="twitter:description" content="Yeminli Çark - Kaderin çarkını çevir, kaderini belirle! Absürt ve eğlenceli çark çevirme deneyimi.">
-    <meta property="twitter:image" content="https://via.placeholder.com/1200x630/8b5cf6/ffffff?text=Wheel+Spinner">
-    
-    <title>Yeminli Çark - Kaderin Çarkı 🎡</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎡</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎡</text></svg>">
-    
-    <!-- Preconnect for performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="style.css">
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VALORANT ŞANS ÇARKI</title>
+<style>
+  :root{
+    --bg:#0f1117;
+    --card:#171a23;
+    --card-2:#1d212c;
+    --text:#e8eaf0;
+    --muted:#9aa0b0;
+    --accent:#ff6b9d;
+    --accent-2:#f8b500;
+    --border:rgba(255,255,255,.08);
+    --danger:#ff4d5e;
+    --ok:#22c98a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    padding:2rem 1rem;
+    line-height:1.5;
+  }
+  header{text-align:center;margin-bottom:2rem}
+  header h1{
+    font-size:2.6rem;
+    font-weight:800;
+    letter-spacing:1px;
+    color:var(--accent);
+  }
+  header p{color:var(--muted);margin-top:.3rem}
+
+  .wheels{
+    display:flex;
+    flex-wrap:wrap;
+    gap:1.5rem;
+    justify-content:center;
+    max-width:1200px;
+    margin:0 auto;
+  }
+  .section{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:1.5rem;
+    width:540px;
+    max-width:100%;
+  }
+  .section h2{
+    font-size:1.25rem;
+    text-align:center;
+    margin-bottom:.75rem;
+  }
+  .result{
+    text-align:center;
+    font-size:1.15rem;
+    font-weight:700;
+    color:var(--accent);
+    background:var(--card-2);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:.7rem 1rem;
+    margin-bottom:1rem;
+    min-height:2.6rem;
+  }
+  .result.win{color:var(--accent-2)}
+
+  .wheel-wrap{
+    position:relative;
+    width:380px;
+    max-width:100%;
+    margin:0 auto 1rem;
+    aspect-ratio:1/1;
+  }
+  canvas{
+    width:100%;
+    height:100%;
+    display:block;
+    border-radius:50%;
+    /* dönüş burada: GPU hızlandırmalı, redraw yok */
+    transition:transform 4.2s cubic-bezier(.16,1,.3,1);
+    will-change:transform;
+  }
+  .pointer{
+    position:absolute;
+    top:-6px;
+    left:50%;
+    transform:translateX(-50%);
+    width:0;height:0;
+    border-left:16px solid transparent;
+    border-right:16px solid transparent;
+    border-top:28px solid var(--accent);
+    z-index:2;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.5));
+  }
+
+  .spin-btn{
+    display:block;
+    width:100%;
+    padding:1rem;
+    font-size:1.15rem;
+    font-weight:700;
+    letter-spacing:1px;
+    color:#fff;
+    background:var(--accent);
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    transition:background .15s, transform .1s;
+  }
+  .spin-btn:hover:not(:disabled){background:#ff85ae}
+  .spin-btn:active:not(:disabled){transform:scale(.98)}
+  .spin-btn:disabled{opacity:.55;cursor:not-allowed}
+
+  details{margin-top:1.25rem}
+  summary{
+    cursor:pointer;
+    color:var(--muted);
+    font-size:.95rem;
+    user-select:none;
+    padding:.4rem 0;
+  }
+  .add-row{display:flex;gap:.5rem;margin:.75rem 0}
+  .add-row input{
+    flex:1;
+    padding:.65rem .9rem;
+    background:var(--card-2);
+    border:1px solid var(--border);
+    border-radius:10px;
+    color:var(--text);
+    font-size:1rem;
+  }
+  .add-row input:focus{outline:none;border-color:var(--accent)}
+  .add-row button{
+    padding:.65rem 1.1rem;
+    background:var(--ok);
+    color:#fff;border:none;border-radius:10px;
+    cursor:pointer;font-weight:600;
+  }
+  .list{
+    max-height:240px;
+    overflow-y:auto;
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem;
+  }
+  .chip{
+    display:inline-flex;
+    align-items:center;
+    gap:.4rem;
+    background:var(--card-2);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:.35rem .75rem;
+    font-size:.85rem;
+  }
+  .chip button{
+    background:none;border:none;color:var(--danger);
+    cursor:pointer;font-size:1rem;line-height:1;padding:0;
+  }
+  .count{color:var(--muted);font-size:.85rem;margin-bottom:.5rem}
+</style>
 </head>
 <body>
-    <div class="animated-background">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
-    <div class="container">
-        <header>
-            <h1>🎡 Yeminli Çark</h1>
-            <p class="tagline">Herkes kendine yakışanı yapsın</p>
-        </header>
+  <header>
+    <h1>VALORANT ŞANS ÇARKI</h1>
+  </header>
 
-        <div class="wheels-container">
-            <!-- Wheel 1 -->
-            <div class="wheel-section">
-                <div class="wheel-header">
-                    <h2>🎯 Çark 1 – İnsanlar</h2>
-                    <div class="selected-result" id="result1">Çarkı çevirmek için hazır... 🎲</div>
-                </div>
-                <div class="wheel-wrapper">
-                    <canvas id="wheel1" width="400" height="400"></canvas>
-                    <div class="pointer"></div>
-                </div>
-                <button class="spin-btn" id="spinBtn1">⚡ ÇARKI ÇEVİR ⚡</button>
-                
-                <div class="options-panel">
-                    <div class="options-header">
-                        <h3>Seçenekler</h3>
-                        <div class="options-count" id="count1">0 seçenek</div>
-                    </div>
-                    <div class="add-option">
-                        <input type="text" id="input1" placeholder="Yeni seçenek ekle..." maxlength="50">
-                        <button class="add-btn" id="addBtn1">➕ Ekle</button>
-                    </div>
-                    <div class="options-list" id="optionsList1">
-                        <!-- Options will be dynamically added here -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Wheel 2 -->
-            <div class="wheel-section">
-                <div class="wheel-header">
-                    <h2>🎯 Çark 2 – Valorant Ajanları</h2>
-                    <div class="selected-result" id="result2">Çarkı çevirmek için hazır... 🎲</div>
-                </div>
-                <div class="wheel-wrapper">
-                    <canvas id="wheel2" width="400" height="400"></canvas>
-                    <div class="pointer"></div>
-                </div>
-                <button class="spin-btn" id="spinBtn2">⚡ ÇARKI ÇEVİR ⚡</button>
-                
-                <div class="options-panel">
-                    <div class="options-header">
-                        <h3>Seçenekler</h3>
-                        <div class="options-count" id="count2">0 seçenek</div>
-                    </div>
-                    <div class="add-option">
-                        <input type="text" id="input2" placeholder="Yeni seçenek ekle..." maxlength="50">
-                        <button class="add-btn" id="addBtn2">➕ Ekle</button>
-                    </div>
-                    <div class="options-list" id="optionsList2">
-                        <!-- Options will be dynamically added here -->
-                    </div>
-                </div>
-            </div>
+  <div class="wheels">
+    <!-- Çark 1 -->
+    <div class="section">
+      <h2>🎯 Çark 1 – Ajanlar</h2>
+      <div class="result" id="result1">Çevirmek için hazır 🎲</div>
+      <div class="wheel-wrap">
+        <div class="pointer"></div>
+        <canvas id="canvas1"></canvas>
+      </div>
+      <button class="spin-btn" id="spin1">ÇARKI ÇEVİR</button>
+      <details>
+        <summary>Seçenekleri düzenle</summary>
+        <div class="add-row">
+          <input id="input1" type="text" placeholder="Yeni seçenek ekle..." maxlength="40">
+          <button id="add1">Ekle</button>
         </div>
+        <div class="count" id="count1"></div>
+        <div class="list" id="list1"></div>
+      </details>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Çark 2 -->
+    <div class="section">
+      <h2>🔫 Çark 2 – Silahlar</h2>
+      <div class="result" id="result2">Çevirmek için hazır 🎲</div>
+      <div class="wheel-wrap">
+        <div class="pointer"></div>
+        <canvas id="canvas2"></canvas>
+      </div>
+      <button class="spin-btn" id="spin2">ÇARKI ÇEVİR</button>
+      <details>
+        <summary>Seçenekleri düzenle</summary>
+        <div class="add-row">
+          <input id="input2" type="text" placeholder="Yeni seçenek ekle..." maxlength="40">
+          <button id="add2">Ekle</button>
+        </div>
+        <div class="count" id="count2"></div>
+        <div class="list" id="list2"></div>
+      </details>
+    </div>
+  </div>
+
+<script>
+const DEFAULTS = {
+  wheel1: ['ASTRA','BREACH','BRIMSTONE','CHAMBER','CLOVE','CYPHER','DEADLOCK',
+    'FADE','GEKKO','HARBOR','ISO','JETT','KAY/O','KILLJOY','MIKS','NEON','OMEN',
+    'PHOENIX','RAZE','REYNA','SAGE','SKYE','SOVA','TEJO','VETO','VIPER','VYSE',
+    'WAYLAY','YORU'],
+  wheel2: ['BANDİT','CLASSIC','SHORTY','FRENZY','GHOST','SHERIFF','STINGER',
+    'SPECTRE','BUCKY','JUDGE','BULLDOG','GUARDIAN','PHANTOM','VANDAL','MARSHAL',
+    'OPERATOR','OUTLAW','ARES','ODIN','BIÇAK']
+};
+
+const COLORS = ['#6366f1','#818cf8','#a78bfa','#c084fc','#d946ef','#ec4899',
+  '#f43f5e','#fb7185','#fb923c','#fbbf24','#facc15','#a3e635','#34d399',
+  '#22d3ee','#38bdf8','#60a5fa','#3b82f6','#2563eb'];
+
+class Wheel {
+  constructor(key){
+    this.key = key;
+    this.storeKey = 'cark_v3_' + key;   // eski kayıtlarla çakışmasın
+    this.canvas = document.getElementById('canvas'+key.slice(-1));
+    this.ctx = this.canvas.getContext('2d');
+    this.result = document.getElementById('result'+key.slice(-1));
+    this.spinBtn = document.getElementById('spin'+key.slice(-1));
+    this.input = document.getElementById('input'+key.slice(-1));
+    this.addBtn = document.getElementById('add'+key.slice(-1));
+    this.list = document.getElementById('list'+key.slice(-1));
+    this.count = document.getElementById('count'+key.slice(-1));
+
+    this.rotation = 0;      // toplam derece
+    this.spinning = false;
+
+    this.options = this.load();
+    this.setupCanvas();
+    this.draw();
+    this.renderList();
+
+    this.spinBtn.addEventListener('click', ()=>this.spin());
+    this.addBtn.addEventListener('click', ()=>this.add());
+    this.input.addEventListener('keydown', e=>{ if(e.key==='Enter') this.add(); });
+    this.canvas.addEventListener('transitionend', ()=>this.finish());
+  }
+
+  load(){
+    try{
+      const s = localStorage.getItem(this.storeKey);
+      if(s){ const a = JSON.parse(s); if(Array.isArray(a) && a.length) return a; }
+    }catch(e){}
+    return [...DEFAULTS[this.key]];
+  }
+  save(){ try{ localStorage.setItem(this.storeKey, JSON.stringify(this.options)); }catch(e){} }
+
+  setupCanvas(){
+    // DPR ile keskin çizim, ama sadece bir kez
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const size = 380;
+    this.canvas.width = size * dpr;
+    this.canvas.height = size * dpr;
+    this.ctx.scale(dpr, dpr);
+    this.size = size;
+  }
+
+  draw(){
+    const ctx = this.ctx, n = this.options.length, R = this.size/2;
+    ctx.clearRect(0,0,this.size,this.size);
+    if(n === 0) return;
+    const slice = (Math.PI*2)/n;
+    const font = n<=6?20 : n<=12?16 : n<=20?13 : 11;
+
+    ctx.save();
+    ctx.translate(R, R);
+    for(let i=0;i<n;i++){
+      const a0 = -Math.PI/2 + i*slice;
+      const a1 = a0 + slice;
+      ctx.beginPath();
+      ctx.moveTo(0,0);
+      ctx.arc(0,0,R-2,a0,a1);
+      ctx.closePath();
+      ctx.fillStyle = COLORS[i % COLORS.length];
+      ctx.fill();
+
+      // metin
+      ctx.save();
+      ctx.rotate(a0 + slice/2);
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold '+font+'px Segoe UI, sans-serif';
+      ctx.fillText(this.options[i], R-12, 0);
+      ctx.restore();
+    }
+    // merkez
+    ctx.beginPath();
+    ctx.arc(0,0,R*0.12,0,Math.PI*2);
+    ctx.fillStyle = '#0f1117';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  spin(){
+    if(this.spinning || this.options.length === 0) return;
+    this.spinning = true;
+    this.spinBtn.disabled = true;
+    this.result.classList.remove('win');
+    this.result.textContent = 'Dönüyor... 🌀';
+
+    const n = this.options.length;
+    const sliceDeg = 360/n;
+    this.winner = Math.floor(Math.random()*n);
+
+    // kazananı pointer'ın (üst) altına ortala + küçük rastgelelik
+    const jitter = (Math.random()-0.5) * sliceDeg * 0.6;
+    let targetMod = ((360 - (this.winner+0.5)*sliceDeg + jitter) % 360 + 360) % 360;
+
+    const fullSpins = 6;
+    let target = Math.floor(this.rotation/360)*360 + fullSpins*360 + targetMod;
+    if(target <= this.rotation + 360) target += 360;
+    this.rotation = target;
+
+    this.canvas.style.transform = 'rotate('+target+'deg)';
+  }
+
+  finish(){
+    if(!this.spinning) return;
+    this.spinning = false;
+    this.spinBtn.disabled = false;
+    const w = this.options[this.winner];
+    this.result.textContent = '🏆 ' + w;
+    this.result.classList.add('win');
+  }
+
+  add(){
+    const v = this.input.value.trim();
+    if(!v || this.options.includes(v)) { this.input.value=''; return; }
+    this.options.push(v);
+    this.input.value = '';
+    this.save(); this.draw(); this.renderList();
+  }
+  remove(i){
+    this.options.splice(i,1);
+    this.save(); this.draw(); this.renderList();
+  }
+  renderList(){
+    this.count.textContent = this.options.length + ' seçenek';
+    this.list.innerHTML = '';
+    this.options.forEach((o,i)=>{
+      const chip = document.createElement('span');
+      chip.className = 'chip';
+      chip.textContent = o;
+      const b = document.createElement('button');
+      b.textContent = '✕';
+      b.onclick = ()=>this.remove(i);
+      chip.appendChild(b);
+      this.list.appendChild(chip);
+    });
+  }
+}
+
+new Wheel('wheel1');
+new Wheel('wheel2');
+</script>
 </body>
 </html>
